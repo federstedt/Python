@@ -5,11 +5,11 @@ import pprint
 
 switches = ['192.168.119.16', '192.168.119.16']
 
-untag = input('Desired untagged vlan:')   #Gör om input till korrekt format (int)!
+untag = input('Desired untagged vlan:')   #make input correct format, int!
 untag = int(untag)
 #untag = 1
 
-tag = input('Desired tagged vlan:')  #Gör om input till korrekt format (int)!
+tag = input('Desired tagged vlan:')  #make input correct format, int!
 tag = int(tag)
 #tag = 119
 
