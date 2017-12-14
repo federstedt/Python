@@ -4,9 +4,20 @@ import pprint
 
 print('Please input switch IP:')
 ip = input()
+#ip = '192.168.119.16'
+print('Desired untagged vlan:')
+untag = input()   #Gör om input till korrekt format (int)!
+untag = int(untag)
+#untag = 1
+print('Desired tagged vlan:')
+tag = input()  #Gör om input till korrekt format (int)!
+tag = int(tag)
+#tag = 119
+
 
 
 url = 'http://' +ip +'/rest/v3/lldp/remote-device'
+
 
 
 get_lldp = requests.get(url)
@@ -18,7 +29,8 @@ get_lldp_json = get_lldp.json()
 # Checks for vlans on a given portid.
 def get_vlan(portnr):
     vlanurl = 'http://' +ip +'/rest/v3/vlans-ports'
-
+    # Missmatch checking:
+    mismatch = 0
     get_vlans = requests.get(vlanurl)
     get_vlans_json = get_vlans.json()
     #pprint.pprint(get_vlans_json)
@@ -30,9 +42,16 @@ def get_vlan(portnr):
         portmode = y['port_mode']
 
         if portnr in port:
-            print('Portid:',port,'vlanid:',vlanid,'portmode:',portmode)
-
-
+            #print('Portid:',port,'vlanid:',vlanid,'portmode:',portmode)   # Troubleshooting? print this...
+            if vlanid != untag and portmode == 'POM_UNTAGGED':
+                print('untag mismatch')
+                print('Expecting untagged:',untag,'configured:', vlanid)
+                mismatch = 1
+            if vlanid != tag and portmode == 'POM_TAGGED_STATIC':
+                print('tag mismatch')
+                print('Expecting tagged:', tag, 'configured:', vlanid)
+                mismatch = 1
+    return mismatch
 
 
 elements = get_lldp_json['lldp_remote_device_element']
@@ -44,13 +63,14 @@ for x in elements:
     local = x['local_port']
     sysname = x['system_name']
     #print(local,sysname)
-    # Currently checks for AP name, is subpar. Should check for lldp type infromation if possible.
+    # Currently checks for AP name, is subpar. Should check for lldp type information if possible.
     if 'AP' in sysname:
-        print('I port:',local,'sitter en AP:',sysname)
+        print('\n In port:',local,'an AP is connected:',sysname ,'checking against desired vlans...')
         apport = x['local_port']
-        get_vlan(apport)
-
-
-
-
-
+        #get_vlan(apport)
+        miss = get_vlan(apport)
+        #print(miss)
+        if miss > 0:
+            print('vlan mismatch for this AP')
+        else:
+            print('Vlans match for this AP')
