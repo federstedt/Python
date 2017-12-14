@@ -2,15 +2,15 @@ import requests
 import pprint
 #pprint = pretty print
 
-print('Please input switch IP:')
-ip = input()
+
+ip = input('Please input switch IP:')
 #ip = '192.168.119.16'
-print('Desired untagged vlan:')
-untag = input()   #Gör om input till korrekt format (int)!
+
+untag = input('Desired untagged vlan:')   #Gör om input till korrekt format (int)!
 untag = int(untag)
 #untag = 1
-print('Desired tagged vlan:')
-tag = input()  #Gör om input till korrekt format (int)!
+
+tag = input('Desired tagged vlan:')  #Gör om input till korrekt format (int)!
 tag = int(tag)
 #tag = 119
 
