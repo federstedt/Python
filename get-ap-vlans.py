@@ -3,8 +3,7 @@ import pprint
 #pprint = pretty print
 
 
-ip = input('Please input switch IP:')
-#ip = '192.168.119.16'
+switches = ['192.168.119.16', '192.168.119.16']
 
 untag = input('Desired untagged vlan:')   #Gör om input till korrekt format (int)!
 untag = int(untag)
@@ -15,20 +14,9 @@ tag = int(tag)
 #tag = 119
 
 
-
-url = 'http://' +ip +'/rest/v3/lldp/remote-device'
-
-
-
-get_lldp = requests.get(url)
-
-get_lldp_json = get_lldp.json()
-
-
-
-# Checks for vlans on a given portid.
+# Function that checks for vlans on a given portid.
 def get_vlan(portnr):
-    vlanurl = 'http://' +ip +'/rest/v3/vlans-ports'
+    vlanurl = baseurl + '/vlans-ports'
     # Missmatch checking:
     mismatch = 0
     get_vlans = requests.get(vlanurl)
@@ -54,23 +42,34 @@ def get_vlan(portnr):
     return mismatch
 
 
-elements = get_lldp_json['lldp_remote_device_element']
 
 
-# Checks lldp information and finds a port to wich a AP is plugged in then sends that portid to function for vlan checking.
-for x in elements:
-    #print("localport: {0} \t NAME: {1}".format(x['local_port'], x['system_name']))
-    local = x['local_port']
-    sysname = x['system_name']
-    #print(local,sysname)
-    # Currently checks for AP name, is subpar. Should check for lldp type information if possible.
-    if 'AP' in sysname:
-        print('\n In port:',local,'an AP is connected:',sysname ,'checking against desired vlans...')
-        apport = x['local_port']
-        #get_vlan(apport)
-        miss = get_vlan(apport)
-        #print(miss)
-        if miss > 0:
-            print('vlan mismatch for this AP')
-        else:
-            print('Vlans match for this AP')
+for ip in switches:
+    baseurl = 'http://' +ip +'/rest/v3'
+    # url example http://192.168.119.16/rest/v3/lldp/remote-device
+
+    url = baseurl + '/lldp/remote-device'
+
+    get_lldp = requests.get(url)
+    get_lldp_json = get_lldp.json()
+    elements = get_lldp_json['lldp_remote_device_element']
+
+    print('\n', ip, 'info for this switch:')
+    # Checks lldp information and finds a port to wich a AP is plugged in then sends that portid to function for vlan checking.
+    for x in elements:
+        # print("localport: {0} \t NAME: {1}".format(x['local_port'], x['system_name']))
+         local = x['local_port']
+         sysname = x['system_name']
+         #print(local,sysname)
+        # Currently checks for AP name, is subpar. Should check for lldp type information if possible.
+         if 'AP' in sysname:
+             print('In port:',local,'an AP is connected:',sysname ,'checking against desired vlans...')
+             apport = x['local_port']
+             #get_vlan(apport)
+             miss = get_vlan(apport)
+             #print(miss)
+
+    if miss > 0:
+        print('vlan mismatch for this Switch')
+    else:
+        print('Vlans match for this Switch')
