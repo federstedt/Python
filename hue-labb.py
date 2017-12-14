@@ -1,9 +1,8 @@
-
 import requests
 import pprint
 import time
 
-user = 'XXxxxxxxxxXXXxxxxxxXXxxxxxXxx'
+user = 'u4Hzj4ddNYAINf4e0RG6-du8kV8uYmgfNiKkdxdR'
 baseurl = 'http://192.168.119.200/api/' + user
 lightsurl = baseurl + '/lights'
 
@@ -40,10 +39,12 @@ def switchlight():
     test = light1['state']['on']
 
     if test == False:
-        payload = '{\"on\":true}'
+        #payload = '{\"on\":true}'  nedan höjer även brightness
+        payload = '{\"on\":true,\"bri\":254}'
         print('Trying to turn ON light...')
     elif test == True:
-        payload = '{\"on\":false}'
+        #payload = '{\"on\":false}'   Nedan sätter även ned brightness
+        payload = '{\"on\":false,\"bri\":67}'
         print('Trying to turn OFF light...')
 
     #print(puturl)
@@ -73,11 +74,3 @@ light1 = getLight('1')
 #pprint.pprint(light1)
 
 switchlight()
-
-
-'''
-Det vi vill PUT: {"on":false}
-payload_vlan = "{\"vlan_id\":"+vlan_number+",\"name\":\""+vlan_name+"\"}"
-config_vlan = requests.request("POST", url_vlans, data=payload_vlan, headers=headers)
-
-'''
