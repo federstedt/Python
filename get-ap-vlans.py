@@ -13,11 +13,9 @@ get_lldp = requests.get(url)
 
 get_lldp_json = get_lldp.json()
 
-#print(type(get_lldp_json))
 
-#pprint.pprint(get_lldp_json)
 
-#Gör om så du tar emot portid nedan och skriver ut vilka vlan som är på porten som skickas
+# Checks for vlans on a given portid.
 def get_vlan(portnr):
     vlanurl = 'http://' +ip +'/rest/v3/vlans-ports'
 
@@ -40,18 +38,19 @@ def get_vlan(portnr):
 elements = get_lldp_json['lldp_remote_device_element']
 
 
-
+# Checks lldp information and finds a port to wich a AP is plugged in then sends that portid to function for vlan checking.
 for x in elements:
     #print("localport: {0} \t NAME: {1}".format(x['local_port'], x['system_name']))
     local = x['local_port']
     sysname = x['system_name']
     #print(local,sysname)
+    # Currently checks for AP name, is subpar. Should check for lldp type infromation if possible.
     if 'AP' in sysname:
         print('I port:',local,'sitter en AP:',sysname)
         apport = x['local_port']
         get_vlan(apport)
 
 
-#Gör om så du skickar porten där en AP sitter till funktionen nedan för att sortera ut vlan på den porten
+
 
 
