@@ -1,5 +1,4 @@
 # Python
 
-#Testar lite bara...
+- Lär mig python, här laddar jag upp script som jag labbat fram som är lite balla.
 
-#Här tänkte jag ladda upp lite python scripts bara.
