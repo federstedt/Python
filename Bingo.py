@@ -1,47 +1,48 @@
 import random
-#Skapa tom lista som fylls på
+#Create empty array to be populated
 list = []
 
-# Generera Random siffra plus BINGO bokstav skicka tillbaka som svar
+# Generate random number and letter from the word BINGO and return answer
 def bingoGen():
-    #Plocka random siffra mellan 1-70
+    #Pick a random number between 1-70
     rnumber = random.randint(1,70)
-    #Gör om till string för att kunna sammanfoga
+    #Make inteter a string to be able to put the values together with letter below
     rnumber = str(rnumber)
 
-    #Plocka random bokstav ur BINGO
+    #pick a random letter BINGO
     rletter =random.choice('BINGO')
 
-    # Sammanfoga och Skicka tillbaka värden
+    # put the strings together and return
     gen = rletter + rnumber
     return (gen)
 
 
 
-#Spela antal varv / räknar varv i loopen.
+#Keeps count of number of loops
 rolls = 0
 inbing = 'no'
 bingo = ['b', 'B']
+#input b if you get BINGO
 print('Välkommen till Bingospelet du får göra egna brickor')
 
 while inbing not in bingo and rolls < 280:
-    # Åkalla funktion för random och spara i lista.
+    # Call function that generates bingo-values
     seed = bingoGen()
     print(rolls)
     #print('dragigts innan:',list)
-    #ifall dragningen är unik och inte dragits innan
+    #check if the returned values are unique and not been drawn before
     if seed not in list:
         #
         inbing = input('\nSpela bingo! skriv b for bingo:')
-        #Break loop ifall du får bingo
+        #Break loop if you get bingo
         if inbing in bingo:
             print('BINGOOOOOOOO !')
             break
         print('dragits innan:', list)
         print('\n','Dragning:   ',seed)
-        #lägger till dragningen i en lista över alla dragningar för att inte dra dubletter
+        #add values to a list that we check next time to make sure it is unique
         list.append(seed)
-        #ökar bara om vi spelar dvs inte vid dublett
+        #increses by 1 to keep track of loops
         rolls = rolls + 1
     #else:
     #    print('dublett!:', seed, 'rerolling')
