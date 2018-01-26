@@ -3,7 +3,7 @@ import pprint
 #pprint = pretty print
 
 
-switches = ['192.168.119.16', '192.168.119.16']
+switches = ['192.168.119.16'] #, '192.168.119.16']
 
 untag = input('Desired untagged vlan:')   #make input correct format, int!
 untag = int(untag)
@@ -45,8 +45,8 @@ def get_vlan(portnr):
 
 
 for ip in switches:
-    baseurl = 'http://' +ip +'/rest/v3'
-    # url example http://192.168.119.16/rest/v3/lldp/remote-device
+    baseurl = 'http://' +ip +'/rest/v4'
+    # url example http://192.168.119.16/rest/v4/lldp/remote-device
 
     url = baseurl + '/lldp/remote-device'
 
@@ -60,9 +60,14 @@ for ip in switches:
         # print("localport: {0} \t NAME: {1}".format(x['local_port'], x['system_name']))
          local = x['local_port']
          sysname = x['system_name']
+         #This method also works
+         #capabilities = x["capabilities_supported"]
+         #isAP = capabilities["wlan_access_point"]
+         isAP = x["capabilities_supported"]["wlan_access_point"]
+         #print(sysname,isAP)
          #print(local,sysname)
         # Currently checks for AP name, is subpar. Should check for lldp type information if possible.
-         if 'AP' in sysname:
+         if isAP == True:
              print('In port:',local,'an AP is connected:',sysname ,'checking against desired vlans...')
              apport = x['local_port']
              #get_vlan(apport)
